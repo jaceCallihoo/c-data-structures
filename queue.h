@@ -48,8 +48,7 @@ name queue_##type##_create() { \
 \
 void queue_##type##_enqueue(name *q, type a) { \
     if (q->size == q->capacity) { \
-        printf("resize\n"); \
-        resize(q); \
+        queue_##type##_resize(q); \
     } \
 \
     q->elements[q->tail] = a; \
