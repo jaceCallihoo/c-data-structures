@@ -5,13 +5,22 @@
 #include <string.h>
 #include <assert.h>
 
-int comp_func(const void* A, const void* B) {
-    int a = *(const int *)A;
-    int b = *(const int *)B;
-    return (a > b) - (a < b);
+static void heap_resize(Heap *heap) {
+    int new_capacity = heap->capacity * 2;
+    int new_size = new_capacity * sizeof(templ);
+
+    templ *new_memory = realloc(heap->elements, new_size);
+    if (new_memory != NULL) {
+        heap->capacity = new_capacity;
+        return;
+    }
+
+    new_memory = malloc(new_capacity);
+    memcpy(heap->elements, new_memory, heap->size * sizeof(templ));
+    heap->capacity = new_capacity;
 }
 
-Heap heap_create() {
+Heap heap_create(int (*comp_func)(const void*, const void*)) {
     Heap heap;
 
     heap.elements = malloc(INITIAL_HEAP_CAPACITY * sizeof(templ));
@@ -62,20 +71,5 @@ void heap_remove(Heap *heap) {
         position = greater_child;
     }
     heap->size--;
-}
-
-void heap_resize(Heap *heap) {
-    int new_capacity = heap->capacity * 2;
-    int new_size = new_capacity * sizeof(templ);
-
-    templ *new_memory = realloc(heap->elements, new_size);
-    if (new_memory != NULL) {
-        heap->capacity = new_capacity;
-        return;
-    }
-
-    new_memory = malloc(new_capacity);
-    memcpy(heap->elements, new_memory, heap->size * sizeof(templ));
-    heap->capacity = new_capacity;
 }
 

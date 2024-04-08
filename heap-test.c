@@ -22,21 +22,28 @@ bool is_heap(Heap heap) {
         int left_child = (i * 2) + 1;
         int right_child = (i * 2) + 2;
 
-        if (left_child < heap.size && heap.elements[left_child] > heap.elements[i]) {
+        if (left_child < heap.size && heap.comp_func(&heap.elements[left_child], &heap.elements[i]) >= 0) {
             return false;
         }
         
-        if (right_child < heap.size && heap.elements[right_child] > heap.elements[i]) {
+        if (right_child < heap.size && heap.comp_func(&heap.elements[right_child], &heap.elements[i]) >= 0) {
             return false;
         }
     }
     return true;
 }
 
+int comp_func(const void* A, const void* B) {
+    int a = *(const int *)A;
+    int b = *(const int *)B;
+    return (a > b) - (a < b);
+}
+
+
 void test1() {
     printf("Can insert an element\n");
 
-    Heap heap = heap_create(); 
+    Heap heap = heap_create(comp_func); 
     heap_insert(&heap, 0);
     
     int result[] = {0};
@@ -47,7 +54,7 @@ void test1() {
 void test2() {
     printf("Can insert two elements\n");
 
-    Heap heap = heap_create(); 
+    Heap heap = heap_create(comp_func); 
     heap_insert(&heap, 1);
     heap_insert(&heap, 0);
     
@@ -59,7 +66,7 @@ void test2() {
 void test3() {
     printf("Can insert an element that needs to be bubbled up\n");
 
-    Heap heap = heap_create(); 
+    Heap heap = heap_create(comp_func); 
     heap_insert(&heap, 0);
     heap_insert(&heap, 1);
     
@@ -71,7 +78,7 @@ void test3() {
 void test4() {
     printf("Can handle a bunch of bubbling up\n");
 
-    Heap heap = heap_create(); 
+    Heap heap = heap_create(comp_func); 
     heap_insert(&heap, 0);
     heap_insert(&heap, 1);
     heap_insert(&heap, 2);
@@ -89,7 +96,7 @@ void test4() {
 void test5() {
     printf("Can handle a bunch of non bubbling up\n");
 
-    Heap heap = heap_create(); 
+    Heap heap = heap_create(comp_func); 
     heap_insert(&heap, 20);
     heap_insert(&heap, 19);
     heap_insert(&heap, 18);
@@ -107,7 +114,7 @@ void test5() {
 void test6() {
     printf("Can remove elements\n");
 
-    Heap heap = heap_create(); 
+    Heap heap = heap_create(comp_func); 
     heap_insert(&heap, 0);  // 0
     heap_insert(&heap, 1);  // 1 0
     heap_insert(&heap, 2);  // 2 0 1
@@ -129,7 +136,7 @@ void test6() {
 void test7() {
     printf("Can resize to add many elements\n");
 
-    Heap heap = heap_create(); 
+    Heap heap = heap_create(comp_func); 
     for (int i = 0; i < 100; i++) {
         heap_insert(&heap, i);
     }

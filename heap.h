@@ -12,10 +12,9 @@ typedef struct Heap {
     int (*comp_func)(const void*, const void*);
 } Heap;
 
-Heap heap_create();
+Heap heap_create(int (*comp_func)(const void*, const void*));
 void heap_insert(Heap *heap, templ value);
 void heap_remove(Heap *heap);
-void heap_resize(Heap *heap);
 
 #endif
 
